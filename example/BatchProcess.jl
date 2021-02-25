@@ -32,4 +32,3 @@ for f in files
         fit_SAIM(path, f, opt1, angles_rad, p0, lb, ub, dis)
     end
 end
-
