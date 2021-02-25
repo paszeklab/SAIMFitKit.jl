@@ -1,0 +1,25 @@
+name = "SAIMFitKit"
+uuid = "12db381f-1373-4c19-8220-6db16b5d6e14"
+authors = ["matth "]
+version = "0.1.0"
+
+[deps]
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
+Images = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
+JLD = "4138dd39-2aa7-5051-a626-17a0bb65d9c8"
+LsqFit = "2fda8390-95c7-5789-9bda-21331edee243"
+Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
+Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
+
+[compat]
+CSV = "0.8"
+DataFrames = "0.22"
+FileIO = "1.4"
+Images = "0.23"
+JLD = "0.12"
+LsqFit = "0.12"
+Plots = "1.1"
+julia = "1.5.3"
+
