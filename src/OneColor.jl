@@ -1,7 +1,3 @@
-function test_working()
-	println("yes")
-end
-
 # ---------------------------- SAIM_fit ---------------------------------------
 # Function to conduct non-linear least squares curve fitting for each pixel
 # in a one-color SAIM image stack

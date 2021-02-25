@@ -33,3 +33,4 @@ for f in files
     end
 end
 
+test_working()

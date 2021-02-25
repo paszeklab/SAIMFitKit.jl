@@ -4,7 +4,6 @@ module SAIMFitKit
             fit_SAIM_g,
             fit_SAIM2c,
             fit_SAIM2c_g,
-            test_working,
             #Types
             SAIMOptics
 
