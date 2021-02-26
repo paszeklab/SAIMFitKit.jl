@@ -1,3 +1,97 @@
+function fit_SAIM2c(file_path::String, file_name::String, optic1::SAIMOptics, optic2::SAIMOptics, 
+	angles::AbstractArray, init_params::AbstractArray, lower_bounds::AbstractArray,
+	upper_bounds::AbstractArray, disp::Bool=false)
+
+	#Calculate the optical model constants for each image frame angle
+	constants = calculate_constants_2c(optic1, optic2, angles)
+
+	#------------- OPEN IMAGE STACK AND INITIALIZE CONTAINERS -------------
+	file = file_path*"\\"*file_name*".tif"
+	#Open an image
+	img1_HWC = load(file);								#image stored as height X width X channels
+	img_CHW = permutedims(img1_HWC, (3, 1, 2))  		#image stored as channels X height X width; CHW indexing more memory friendly
+	channels = channelview(float64.(img_CHW))*65535; 	#Each channel corresponds to a specific excitation angle
+	rows = size(channels,2)  							#Image size is (number channels X rows X cols)
+	cols = size(channels,3)								#Image size is (number channels X rows X cols)
+
+	#Initialize container to store the fitted heights and fitting results
+	fit_params = Array{Float64}(undef, rows, cols, 5)
+	fit_errors = fill(-1.0, rows, cols, 5)
+
+	#-------------- CONDUCT THE FITTING ----------------------
+	println("Conducting fit for ", file_name)  #Threads.@threads
+	counter = 0
+	@time Threads.@threads for i = 1:rows
+		for j = 1:cols
+			ydata = channels[:,i,j]
+
+			result = curve_fit(model_2c, jacobian_model_2c, constants, ydata,
+				init_params, lower=lower_bounds, upper=upper_bounds)
+
+			fit_params[i,j,:] = coef(result)
+
+			#Calculate the standard errors for the fitted parameters
+			try
+           		fit_errors[i,j,:] = stderror(result)
+       		catch e
+           		counter = counter + 1
+       		end
+		end
+	end
+	println("  ", (rows*cols - counter), " out of ", (rows*cols), " pixels fit within bounds")
+
+	#-------------- GENERATE THE OUTPUTS ----------------------
+	println("Generating outputs for ", file_name)
+
+	#Make an output directory if needed
+	dir = file_path*"\\output\\"*file_name
+
+	if !isdir(file_path*"\\output")
+		mkdir(file_path*"\\output")
+	end
+	
+	if !isdir(dir)
+		mkdir(dir)
+	end
+
+	#Save height information in a 16-bit image; Pixel intensity = 100*height in nm
+	save(File(format"PNG", dir*"\\"*file_name*"_H.png"), n0f16.((fit_params[:,:,5]/1000.)*(100000. / 65535.)))
+
+	#Save the fit information as a JLD file (includes fit parameters, errors, and metadata)
+	save(File(format"JLD", dir*"\\"*file_name*"_results.jld"),"A1", fit_params[:,:,1], "B1",
+		fit_params[:,:,2], "A2", fit_params[:,:,3], "B2", fit_params[:,:,4],
+		"H",fit_params[:,:,5], "errors", fit_errors, "constants", constants,
+		"angles", angles, "ip", init_params, "lb", lower_bounds, "ub",
+		upper_bounds, "optic1", optic1, "optic2", optic2,
+		"type", "two-color global")
+
+	#Save the fit parameters and height standard err as CSV files
+	if !isdir(dir*"\\CSV")
+		mkdir(dir*"\\CSV")
+	end
+	CSV.write(dir*"\\CSV\\"*file_name*"_A1.csv",  DataFrame(fit_params[:,:,1]), writeheader=false)
+	CSV.write(dir*"\\CSV\\"*file_name*"_B1.csv",  DataFrame(fit_params[:,:,2]), writeheader=false)
+	CSV.write(dir*"\\CSV\\"*file_name*"_A2.csv",  DataFrame(fit_params[:,:,3]), writeheader=false)
+	CSV.write(dir*"\\CSV\\"*file_name*"_B2.csv",  DataFrame(fit_params[:,:,4]), writeheader=false)
+	CSV.write(dir*"\\CSV\\"*file_name*"_H.csv",  DataFrame(fit_params[:,:,5]), writeheader=false)
+	CSV.write(dir*"\\CSV\\"*file_name*"_H_sterr.csv",  DataFrame(fit_errors[:,:,5]), writeheader=false)
+
+	#Construct a height map and save
+	hm = heatmap(fit_params[:,:,5], yflip=true, colorbar_title="height (nm)",
+		color=:RdYlBu_10, aspect_ratio=:equal, xaxis = (nothing, false),
+		 yaxis = (nothing, false))
+	ylims!((1,rows))
+	xlims!((1,cols))
+	display(hm)
+	savefig(hm, dir*"\\"*file_name*"_Hmap.pdf")
+	println("Completed ", file_name)
+	println()
+	if disp
+		display(hm)
+	end
+end
+
+
 # ---------------------------- fit_2c_local ---------------------------------------
 # Function to conduct local non-linear least squares curve fitting for each
 # pixel in a two-color SAIM image stack

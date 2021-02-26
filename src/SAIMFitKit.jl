@@ -1,6 +1,7 @@
 module SAIMFitKit
 
     export  fit_SAIM,
+            fit_SAIM2c,
             #Types
             SAIMOptics
 
