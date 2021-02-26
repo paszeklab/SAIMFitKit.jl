@@ -24,7 +24,6 @@ function fit_2c_local(file_path::String, file_name::String, optic1::SAIMOptics, 
 	angles::AbstractArray, init_params::AbstractArray, lower_bounds::AbstractArray,
 	upper_bounds::AbstractArray, disp::Bool=false)
 
-	println("here")
 	#Calculate the optical model constants for each image frame angle
 	constants = calculate_constants_2c(optic1, optic2, angles)
 
@@ -244,7 +243,7 @@ function fit_2c_global(file_path::String, file_name::String, optic1::SAIMOptics,
 	end
 end
 
-# ------------------------ Calculate_Constants_2c -----------------------------
+# ------------------------ calculate_constants_2c -----------------------------
 # Function that returns constants for calculating Fresnel coefficients (real
 # and imag components) and phase constants in two-color SAIM fitting routines
 # INPUTS:
