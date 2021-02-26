@@ -1,9 +1,6 @@
 module SAIMFitKit
 
     export  fit_SAIM,
-            fit_SAIM_g,
-            fit_SAIM2c,
-            fit_SAIM2c_g,
             #Types
             SAIMOptics
 
@@ -18,8 +15,10 @@ module SAIMFitKit
 
     # include package codes -
     include("Types.jl")
+    include("DataFit.jl")
     include("OneColor.jl")
     include("TwoColor.jl")
+    include("ThreeColor.jl")
     include("Utilities.jl")
 
 end # module

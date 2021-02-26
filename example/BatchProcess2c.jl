@@ -19,21 +19,18 @@ opt2 = SAIMOptics(nB, nOx_2, nSi_2, dOx, λ_Ex_2)
 p0 = [0.5, 1.0, 0.5, 1.0, 75.0]		            #Initial guesses for parameters [A1, B1, A2, B2, H]
 lb = [0.0, 0.0, 0.0, 0.0, 0.0]					#Lower bounds for [A1, B1, A2, B2, H]
 ub = [10000., 10000., 10000., 10000., 450.]		#Upper bounds for [A1, B1, A2, B2, H]
-glb = false						                #Conduct global grid search when true
+g = false						                #Conduct global grid search when true
 step = 40.0						                #Step size for global grid search
-dis = true                      #Display generated heatmaps when true
+d = true                                        #Display generated heatmaps when true
 
 #-------------- IMAGE STACKS ---------------------
-angles_deg = range(5.0, length=32, stop=43.75)	#Incidece angle in degrees for each image frame	
-angles_rad = angles_deg*2*pi/360  	                #Inccidece angle in radians for each image frame
+angles = range(5.0, length=32, stop=43.75)	#Incidece angle in degrees for each image frame	
+
 files = ["488_noisy_2_647_noisy_c"]				#Names of image stacks; multiple experiments can be listed to run in batch
 path = "C:\\Users\\matth\\Documents\\Julia Scripts\\SAIMFitKit\\example\\TestImages" #Path to image files
 
 #-------------- CONDUCT FITS ---------------------
 for f in files
-    if glb  #Run a global grid search when true
-        fit_SAIM2c_g(path, f, opt1, opt2, angles_rad, p0, lb, ub, step, dis)
-    else	#Conduct a local search
-        fit_SAIM2c(path, f, opt1, opt2, angles_rad, p0, lb, ub, dis)
-    end
+    println("here1")
+    fit_SAIM(path, f, opt1, opt2, angles, p0, lb, ub)
 end

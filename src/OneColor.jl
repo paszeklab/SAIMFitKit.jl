@@ -1,4 +1,4 @@
-# ---------------------------- SAIM_fit ---------------------------------------
+# ---------------------------- fit_1c_local ---------------------------------------
 # Function to conduct non-linear least squares curve fitting for each pixel
 # in a one-color SAIM image stack
 # Images sequences should be saved as a tif stack
@@ -19,11 +19,11 @@
 # proportional to best-fit pixel height -  Pixel intensity = 100*height in nm;
 # 3) JLD file with results for each pixel - Fields are "A," "B,"  "H,"
 # and "errors"; errors are the standard errors for fit [A, B, H]
-function fit_SAIM(file_path::String, file_name::String, optic::SAIMOptics, angles::AbstractArray, 
+function fit_1c_local(file_path::String, file_name::String, optic::SAIMOptics, angles::AbstractArray, 
 	init_params::AbstractArray, lower_bounds::AbstractArray, upper_bounds::AbstractArray, disp::Bool=false)
 
 	#Calculate the optical model constants for each image frame angle
-	constants = calculate_constants(optic, angles)
+	constants = calculate_constants_1c(optic, angles)
 
 	#------------- OPEN IMAGE STACK AND INITIALIZE CONTAINERS -------------
 	file = file_path*"\\"*file_name*".tif"
@@ -108,9 +108,9 @@ function fit_SAIM(file_path::String, file_name::String, optic::SAIMOptics, angle
 	end
 end
 
-# ---------------------------- fit_SAIM_g ----------------------------------
+# ---------------------------- fit_1c_global ----------------------------------
 # Function to conduct global non-linear least squares curve fitting for each
-# pixel in a two-color SAIM image stack
+# pixel in a one-color SAIM image stack
 # Executes a simple grid search, stepping through initial guesses for H; search
 # is conducted along H from lower_bounds to upper_bounds
 # Images sequences should be saved as a tif stack
@@ -132,13 +132,13 @@ end
 # proportional to best-fit pixel height -  Pixel intensity = 100*height in nm;
 # 3) JLD file with results for each pixel - Fields are "A," "B,"  "H,"
 # and "errors"; errors are the standard errors for fit [A, B, H]
-function fit_SAIM_g(file_path::String, file_name::String, optic::SAIMOptics, angles::AbstractArray, 
+function fit_1c_global(file_path::String, file_name::String, optic::SAIMOptics, angles::AbstractArray, 
 	init_params::AbstractArray, lower_bounds::AbstractArray, upper_bounds::AbstractArray, 
 	step::Float64=40., disp::Bool=false)
 
 
 	#Calculate the optical model constants for each image frame angle
-	constants = calculate_constants(optic, angles)
+	constants = calculate_constants_1c(optic, angles)
 
 	#------------- OPEN IMAGE STACK AND INITIALIZE CONTAINERS -------------
 	file = file_path*"\\"*file_name*".tif"
@@ -233,14 +233,14 @@ function fit_SAIM_g(file_path::String, file_name::String, optic::SAIMOptics, ang
 
 end
 
-# ------------------------ Calculate_Constant -----------------------------
+# ------------------------ calculate_constants_1c -----------------------------
 # Function that returns constants for calculating Fresnel coefficients (real
 # and imag components) and phase constants in one-color SAIM fitting routines
 # INPUTS:
 # optic: Optical struct containing parameters for the excitation wavelength
 # angles: 1D array containing incidence angles in radians for the acquisition
 # sequence
-function calculate_constants(optic, angles)
+function calculate_constants_1c(optic, angles)
 
 	#Initialize containers for holding the constants
 	constants = Array{Float64}(undef, length(angles), 3)

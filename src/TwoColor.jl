@@ -1,7 +1,4 @@
-
-gr(show = true)
-
-# ---------------------------- fit_SAIM2c ---------------------------------------
+# ---------------------------- fit_2c_local ---------------------------------------
 # Function to conduct local non-linear least squares curve fitting for each
 # pixel in a two-color SAIM image stack
 # Images sequences should be saved as a tif stack
@@ -23,12 +20,13 @@ gr(show = true)
 # proportional to best-fit pixel height -  Pixel intensity = 100*height in nm;
 # 3) JLD file with results for each pixel - Fields are "A1," "B1," "A2," "B2,"
 # "H," and "errors"; errors are the standard errors for fit [A1, B1, A2, B2, H]
-function fit_SAIM2c(file_path::String, file_name::String, optic1::SAIMOptics, optic2::SAIMOptics, 
+function fit_2c_local(file_path::String, file_name::String, optic1::SAIMOptics, optic2::SAIMOptics, 
 	angles::AbstractArray, init_params::AbstractArray, lower_bounds::AbstractArray,
 	upper_bounds::AbstractArray, disp::Bool=false)
 
+	println("here")
 	#Calculate the optical model constants for each image frame angle
-	constants = calculate_constants2c(optic1, optic2, angles)
+	constants = calculate_constants_2c(optic1, optic2, angles)
 
 	#------------- OPEN IMAGE STACK AND INITIALIZE CONTAINERS -------------
 	file = file_path*"\\"*file_name*".tif"
@@ -50,7 +48,7 @@ function fit_SAIM2c(file_path::String, file_name::String, optic1::SAIMOptics, op
 		for j = 1:cols
 			ydata = channels[:,i,j]
 
-			result = curve_fit(model2c, jacobian_model2c, constants, ydata,
+			result = curve_fit(model_2c, jacobian_model_2c, constants, ydata,
 				init_params, lower=lower_bounds, upper=upper_bounds)
 
 			fit_params[i,j,:] = coef(result)
@@ -116,7 +114,7 @@ function fit_SAIM2c(file_path::String, file_name::String, optic1::SAIMOptics, op
 	end
 end
 
-# ---------------------------- fit_SAIM2c_g ----------------------------------
+# ---------------------------- fit_2c_global ----------------------------------
 # Function to conduct global non-linear least squares curve fitting for each
 # pixel in a two-color SAIM image stack
 # Executes a simple grid search, stepping through initial guesses for H; search
@@ -141,12 +139,12 @@ end
 # proportional to best-fit pixel height -  Pixel intensity = 100*height in nm;
 # 3) JLD file with results for each pixel - Fields are "A1," "B1," "A2," "B2,"
 # "H," and "errors"; errors are the standard errors for fit [A1, B1, A2, B2, H]
-function fit_SAIM2c_g(file_path::String, file_name::String, optic1::SAIMOptics, optic2::SAIMOptics, 
+function fit_2c_global(file_path::String, file_name::String, optic1::SAIMOptics, optic2::SAIMOptics, 
 	angles::AbstractArray, init_params::AbstractArray, lower_bounds::AbstractArray,
 	upper_bounds::AbstractArray, step::Float64=40., disp::Bool=false)
 
 	#Calculate the optical model constants for each image frame angle
-	constants = calculate_constants2c(optic1, optic2, angles)
+	constants = calculate_constants_2c(optic1, optic2, angles)
 
 	#------------- OPEN IMAGE STACK AND INITIALIZE CONTAINERS -------------
 	file = file_path*"\\"*file_name*".tif"
@@ -177,7 +175,7 @@ function fit_SAIM2c_g(file_path::String, file_name::String, optic1::SAIMOptics, 
 			#Global fitting routine - grid search
 			for Hₒ in guesses
 				params[5] = Hₒ
-				result = curve_fit(model2c, jacobian_model2c, constants, ydata,
+				result = curve_fit(model_2c, jacobian_model_2c, constants, ydata,
 					params, lower=lower_bounds, upper=upper_bounds)
 				#Calculate the standard errors for the fitted parameters
 				if result.converged
@@ -246,7 +244,7 @@ function fit_SAIM2c_g(file_path::String, file_name::String, optic1::SAIMOptics, 
 	end
 end
 
-# ------------------------ Calculate_Constants2c -----------------------------
+# ------------------------ Calculate_Constants_2c -----------------------------
 # Function that returns constants for calculating Fresnel coefficients (real
 # and imag components) and phase constants in two-color SAIM fitting routines
 # INPUTS:
@@ -254,7 +252,7 @@ end
 # optic2: Optical struct containing parameters for excitation wavelength #2
 # angles: 1D array containing incidence angles in radians for the acquisition
 # 	sequence
-function calculate_constants2c(optic1, optic2, angles)
+function calculate_constants_2c(optic1, optic2, angles)
 
 	#Initialize containers for holding the constants
 	num_angles = length(angles)
@@ -332,7 +330,7 @@ end
 #Optical model for two-color experiments: y = A*Pex(H,theta)+B
 #p = [A1, B1, A2, B2, H]
 #x[i,:] holds the optical model constants for each excitation incidence angle / wavelength combination
-function model2c(x, p)
+function model_2c(x, p)
 
 	y= Vector{Float64}(undef, length(x[:,1]))
 	num_angles::Int16 = length(x[:,1])/2
@@ -362,7 +360,7 @@ end
 #Generate the analytical Jacobian for model2c
 #p = [A1, B1, A2, B2, H]
 #x[i,:] holds the optical model constants for each excitation incidence angle / wavelength combination
-function jacobian_model2c(x,p)
+function jacobian_model_2c(x,p)
 
 	J = Array{Float64}(undef, length(x[:,1]), length(p))
 	num_angles::Int16 = length(x[:,1])/2
