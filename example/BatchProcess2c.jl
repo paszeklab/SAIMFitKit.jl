@@ -30,5 +30,5 @@ path = "C:\\Users\\matth\\Documents\\Julia Scripts\\SAIMFitKit\\example\\TestIma
 
 #-------------- CONDUCT FITS ---------------------
 for f in files
-    fit_SAIM(path, f, opt1, opt2, angles, p0, lb, ub)
+    fit_SAIM(path, f, opt1, opt2, angles, p0, lb, ub, disp=false)
 end
