@@ -30,9 +30,5 @@ path = "C:\\Users\\matth\\Documents\\Julia Scripts\\SAIMFitKit\\example\\TestIma
 
 #-------------- CONDUCT FITS ---------------------
 for f in files
-<<<<<<< Updated upstream
-    fit_SAIM(path, f, opt1, opt2, angles, p0, lb, ub, disp=false)
-=======
     fit_SAIM(path, f, opt, angles, p0, lb, ub, disp=true, glb=false, color=2)
->>>>>>> Stashed changes
 end
