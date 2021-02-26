@@ -22,9 +22,11 @@ function fit_SAIM(file_path::String, file_name::String, optic1::SAIMOptics, opti
     if glb	#Run a global grid search when true
         fit_2c_global(file_path, file_name, optic1, optic2, angles_rad, init_params, lower_bounds, 
         upper_bounds, step, disp)
+        println("2c global")
     else	#Conduct a local search
         fit_2c_local(file_path, file_name, optic1, optic2, angles_rad, init_params, lower_bounds, 
         upper_bounds, disp)
+        println("2c local")
     end
 end
 
