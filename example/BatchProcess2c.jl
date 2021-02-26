@@ -25,11 +25,17 @@ d = true                                        #Display generated heatmaps when
 
 #-------------- IMAGE STACKS ---------------------
 angles = range(5.0, length=32, stop=43.75)	#Incidece angle in degrees for each image frame	
-
+angles_rad = angles*2*pi/360 
 files = ["488_noisy_2_647_noisy_c"]				#Names of image stacks; multiple experiments can be listed to run in batch
 path = "C:\\Users\\matth\\Documents\\Julia Scripts\\SAIMFitKit\\example\\TestImages" #Path to image files
 
 #-------------- CONDUCT FITS ---------------------
 for f in files
+<<<<<<< Updated upstream
     fit_SAIM(path, f, opt1, opt2, angles, p0, lb, ub)
+=======
+    println("here1")
+    #fit_SAIM(path, f, opt1, opt2, angles, p0, lb, ub)
+    fit_SAIM2c(path, f, opt1, opt2, angles_rad, p0, lb, ub, d)
+>>>>>>> Stashed changes
 end
