@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 function fit_SAIM2c(file_path::String, file_name::String, optic1::SAIMOptics, optic2::SAIMOptics, 
 	angles::AbstractArray, init_params::AbstractArray, lower_bounds::AbstractArray,
 	upper_bounds::AbstractArray, disp::Bool=false)
@@ -92,6 +93,8 @@ function fit_SAIM2c(file_path::String, file_name::String, optic1::SAIMOptics, op
 end
 
 
+=======
+>>>>>>> Stashed changes
 # ---------------------------- fit_2c_local ---------------------------------------
 # Function to conduct local non-linear least squares curve fitting for each
 # pixel in a two-color SAIM image stack
@@ -114,12 +117,12 @@ end
 # proportional to best-fit pixel height -  Pixel intensity = 100*height in nm;
 # 3) JLD file with results for each pixel - Fields are "A1," "B1," "A2," "B2,"
 # "H," and "errors"; errors are the standard errors for fit [A1, B1, A2, B2, H]
-function fit_2c_local(file_path::String, file_name::String, optic1::SAIMOptics, optic2::SAIMOptics, 
+function fit_2c_local(file_path::String, file_name::String, optic::SAIMOptics, 
 	angles::AbstractArray, init_params::AbstractArray, lower_bounds::AbstractArray,
 	upper_bounds::AbstractArray, disp::Bool=false)
 
 	#Calculate the optical model constants for each image frame angle
-	constants = calculate_constants_2c(optic1, optic2, angles)
+	constants = calculate_constants_2c(optic, angles)
 
 	#------------- OPEN IMAGE STACK AND INITIALIZE CONTAINERS -------------
 	file = file_path*"\\"*file_name*".tif"
@@ -178,8 +181,7 @@ function fit_2c_local(file_path::String, file_name::String, optic1::SAIMOptics, 
 		fit_params[:,:,2], "A2", fit_params[:,:,3], "B2", fit_params[:,:,4],
 		"H",fit_params[:,:,5], "errors", fit_errors, "constants", constants,
 		"angles", angles, "ip", init_params, "lb", lower_bounds, "ub",
-		upper_bounds, "optic1", optic1, "optic2", optic2,
-		"type", "two-color global")
+		upper_bounds, "optic", optic, "type", "two-color local")
 
 	#Save the fit parameters and height standard err as CSV files
 	if !isdir(dir*"\\CSV")
@@ -232,12 +234,12 @@ end
 # proportional to best-fit pixel height -  Pixel intensity = 100*height in nm;
 # 3) JLD file with results for each pixel - Fields are "A1," "B1," "A2," "B2,"
 # "H," and "errors"; errors are the standard errors for fit [A1, B1, A2, B2, H]
-function fit_2c_global(file_path::String, file_name::String, optic1::SAIMOptics, optic2::SAIMOptics, 
+function fit_2c_global(file_path::String, file_name::String, optic::SAIMOptics, 
 	angles::AbstractArray, init_params::AbstractArray, lower_bounds::AbstractArray,
 	upper_bounds::AbstractArray, step::Float64=40., disp::Bool=false)
 
 	#Calculate the optical model constants for each image frame angle
-	constants = calculate_constants_2c(optic1, optic2, angles)
+	constants = calculate_constants_2c(optic, angles)
 
 	#------------- OPEN IMAGE STACK AND INITIALIZE CONTAINERS -------------
 	file = file_path*"\\"*file_name*".tif"
@@ -308,8 +310,7 @@ function fit_2c_global(file_path::String, file_name::String, optic1::SAIMOptics,
 		fit_params[:,:,2], "A2", fit_params[:,:,3], "B2", fit_params[:,:,4],
 		"H",fit_params[:,:,5], "errors", fit_errors, "constants", constants,
 		"angles", angles, "ip", init_params, "lb", lower_bounds, "ub",
-		upper_bounds, "step", step, "optic1", optic1, "optic2", optic2,
-		"type", "two-color global")
+		upper_bounds, "step", step, "optic", optic, "type", "two-color global")
 
 	#Save the fit parameters and height standard err as CSV files
 	if !isdir(dir*"\\CSV")
@@ -345,18 +346,18 @@ end
 # optic2: Optical struct containing parameters for excitation wavelength #2
 # angles: 1D array containing incidence angles in radians for the acquisition
 # 	sequence
-function calculate_constants_2c(optic1, optic2, angles)
+function calculate_constants_2c(optic, angles)
 
 	#Initialize containers for holding the constants
 	num_angles = length(angles)
 	constants = Array{Float64}(undef, 2*num_angles, 3)
 
 	#Calculate the constants for the first laser wavelength
-	wavelength = optic1.lambda_Ex	#The Excitation wavelength
-	dOx = optic1.d_Oxide		#The thickness of the SiO2 layer in units of nm
-	nB = optic1.n_Buffer		#The refractive index of the ambient media / cytoplasm
-	nOx = optic1.n_Oxide		#The refractive index of SiO2
-	nSi = optic1.n_Silicon		#The efractive index of Si
+	wavelength = optic.λ_Ex_1	#The Excitation wavelength
+	dOx = optic.dOx 			#The thickness of the SiO2 layer in units of nm
+	nB = optic.nB				#The refractive index of the ambient media / cytoplasm
+	nOx = optic.nOx_1			#The refractive index of SiO2
+	nSi = optic.nSi_1			#The efractive index of Si
 
 	inds = axes(angles, 1)
 	for i = inds
@@ -385,11 +386,9 @@ function calculate_constants_2c(optic1, optic2, angles)
 	end
 
 	#Calculate the constants for the second laser wavelength
-	wavelength = optic2.lambda_Ex	#The Excitation wavelength
-	dOx = optic2.d_Oxide		#The thickness of the SiO2 layer in units of nm
-	nB = optic2.n_Buffer		#The refractive index of the ambient media / cytoplasm
-	nOx = optic2.n_Oxide		#The refractive index of SiO2
-	nSi = optic2.n_Silicon		#The efractive index of Si
+	wavelength = optic.λ_Ex_2	#The Excitation wavelength
+	nOx = optic.nOx_2			#The refractive index of SiO2
+	nSi = optic.nSi_2			#The efractive index of Si
 
 	#inds = axes(angles, 1)
 	for i = inds

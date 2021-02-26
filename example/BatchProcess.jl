@@ -1,14 +1,13 @@
 using SAIMFitKit
 
 #-------------- OPTICAL PARAMETERS----------------------
-nB = 1.33;			#The refractive index of the ambient media / cytoplasm
-dOx = 1924.9;		#The thickness of the SiO2 layer in units of nm
 
-λ_Ex_1 = 642.0; 	#The wavelength of excitation laser #2 in units of nm
-nOx_1 = 1.4719;		#The refractive index of SiO2 at excitation wavelength #2
-nSi_1 = 3.8660 + 0.017933im; 	#The complex refractive index of Si at excitation wavelength #2; #4.3 + 0.073im;k = 0.017933
-
-opt1 = SAIMOptics(nB, nOx_1, nSi_1, dOx, λ_Ex_1)
+opt = SAIMOptics()
+opt.nB = 1.33;	                    #The refractive index of the ambient buffer / cytoplasm
+opt.dOx = 1924.9;	                #The thickness of the SiO2 layer in units of nm
+opt.λ_Ex_1 = 642.0;		        	#The wavelength of the microscope excitation laser #1 in units of nm
+opt.nOx_1 = 1.4719;		            #The refractive index of SiO2
+opt.nSi_1 = 3.8660 + 0.017933im;    #The complex refractive index of Si
 
 #-------------- FIT PARAMETERS----------------------
 p0 = [0.5, 1.0, 75.0]		    #Initial guesses for parameters [A, B, H]
@@ -25,6 +24,6 @@ path = "C:\\Users\\matth\\Documents\\Julia Scripts\\SAIMFitKit\\example\\TestIma
 
 #-------------- CONDUCT FITS ---------------------
 for f in files
-    fit_SAIM(path, f, opt1, angles, p0, lb, ub, glb=g, disp=d)
+    fit_SAIM(path, f, opt, angles, p0, lb, ub, glb=g, disp=d)
 end
 

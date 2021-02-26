@@ -89,6 +89,6 @@ end
 #Generate the analytical Jacobian for model_3c
 #p = [A1, B1, A2, B2, A3, B3, H]
 #x[i,:] holds the optical model constants for each excitation incidence angle / wavelength combination
-function jacobian_model_2c(x,p)
+function jacobian_model_3c(x,p)
     #Add code
 end

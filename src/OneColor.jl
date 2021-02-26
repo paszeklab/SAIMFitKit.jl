@@ -245,11 +245,11 @@ function calculate_constants_1c(optic, angles)
 	#Initialize containers for holding the constants
 	constants = Array{Float64}(undef, length(angles), 3)
 
-	wavelength = optic.lambda_Ex	#The Excitation wavelength
-	dOx = optic.d_Oxide		#The thickness of the SiO2 layer in units of nm
-	nB = optic.n_Buffer		#The refractive index of the ambient media / cytoplasm
-	nOx = optic.n_Oxide		#The refractive index of SiO2
-	nSi = optic.n_Silicon		#The efractive index of Si
+	wavelength = optic.λ_Ex_1	#The Excitation wavelength
+	dOx = optic.dOx 			#The thickness of the SiO2 layer in units of nm
+	nB = optic.nB				#The refractive index of the ambient media / cytoplasm
+	nOx = optic.nOx_1			#The refractive index of SiO2
+	nSi = optic.nSi_1			#The efractive index of Si
 
 	inds = axes(angles, 1)
 	for i = inds
