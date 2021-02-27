@@ -24,7 +24,7 @@ opt.λ_Ex_1 = 642.0;		        	#Excitation laser wavelength #1 in units of nm
 opt.nOx_1 = 1.4719;		          #Refractive index of SiO2 at the excitation wavelength
 opt.nSi_1 = 3.8660 + 0.017933im;    #The complex refractive index of Si at the excitation wavelength
 ```
-The function fit_SAIM applies the per observation function `A*Pex(H, angle[i])+B` to the full dataset encoded by the intensities at each channel in the image stack.  Each channel in the SAIM image stack corresponds to a microscope acquisition at excitation laser incidence angle[i]. Fits are conducted at each image pixel independently. A, B, and H are the three fit parameters for single wavelength experiment.
+The function `fit_SAIM()` applies the per observation function `A*Pex(H, angle[i])+B` to the full dataset encoded by the intensities at each channel in the image stack.  Each channel in the SAIM image stack corresponds to a microscope acquisition at excitation laser incidence angle[i]. Fits are conducted at each image pixel independently. A, B, and H are the three fit parameters for single wavelength experiment.
 
 ```julia
 # Fit parameters
