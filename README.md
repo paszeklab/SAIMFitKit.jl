@@ -8,8 +8,7 @@ Colville MJ, Park S, Zipfel WR, and Paszek MJ. High-speed device synchronization
 
 Paszek MJ, Dufort C, Rubashkin MG, Davidson MW, Thorn KS, Liphardt JT, and Weaver VM.  2012.  Scanning angle interference microscopy reveals cell dynamics at the nano-scale.  Nature Methods 9: 825-7
 
-Basic Usage
------------
+## Basic Usage
 
 The method `fit_SAIM()` is the main data fitting routine. The current implementation supports analysis of SAIM image sequences acquired with one, two, or three (in development) laser excitation wavelengths. Currently only analysis of tif image stacks are supported.  Basic usage for analysis of a typical experiment with a single excitation wavelength is provided below:
 
@@ -41,8 +40,7 @@ path = "[user home folder]\\.julia\\dev\\SAIMFitKit\\example\\TestImages" #Path 
 fit = fit_SAIM(path, f, opt, angles, p0, lb, ub, glb=true, step=40.0, show=true)
 ```
 
-Existing Functionality
-----------------------
+## Existing Functionality
 
 `fit = fit_SAIM(file_path, file_name, optic, angles, init_params, lower_bounds, upper_bounds; kwargs...)`:
 
