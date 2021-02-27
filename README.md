@@ -36,7 +36,8 @@ angles = range(5.0, length=32, stop=43.75)	    #Incidence angle in degrees for e
 f = "21TR_5c"                                   #Name of image stack; .tif extension should not be included in the image name
 path = "[user home folder]\\.julia\\dev\\SAIMFitKit\\example\\TestImages" #Path to image file location
 
-# Conduct fit with global grid search (glb=true) with step size of 40 nm (step=40.0) and displaying the plot of the fit heights (show=true)
+# Conduct fit with global grid search (glb=true) with step size of 40 nm (step=40.0) and displaying the plot of 
+#the fit heights (show=true)
 fit = fit_SAIM(path, f, opt, angles, p0, lb, ub, glb=true, step=40.0, show=true)
 ```
 
