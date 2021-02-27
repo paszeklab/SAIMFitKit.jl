@@ -8,9 +8,7 @@
 # INPUTS:
 # name: A string that stores base file name of tif stack
 # file_ext: file extension for iumage stack; Only ".tif" has been tested so far
-# optic1: Optical struct containing parameters for excitation wavelength #1
-# optic2: Optical struct containing parameters for excitation wavelength #2
-# optic3: Optical struct containing parameters for excitation wavelength #3
+# optic: SAIMOptics structure
 # angles: 1D array containing incidence angles in radians for the acquisition
 # 	sequence
 # init_params: Intial parameters, [A1ₒ, B1ₒ, A2ₒ, B2ₒ, A3ₒ, B3ₒ]
@@ -21,8 +19,8 @@
 # proportional to best-fit pixel height -  Pixel intensity = 100*height in nm;
 # 3) JLD file with results for each pixel - Fields are "A1," "B1," "A2," "B2," "A3", "B3",
 # "H," and "errors"; errors are the standard errors for fit [A1, B1, A2, B2, H]
-function fit_3c_local(file_path::String, file_name::String, optic1::SAIMOptics, optic2::SAIMOptics, 
-	optic3::SAIMOptics, angles::AbstractArray, init_params::AbstractArray, lower_bounds::AbstractArray,
+function fit_3c_local(file_path::String, file_name::String, optic::SAIMOptics, 
+    angles::AbstractArray, init_params::AbstractArray, lower_bounds::AbstractArray,
 	upper_bounds::AbstractArray, disp::Bool=false)
 
     #Add code
@@ -40,9 +38,7 @@ end
 # INPUTS:
 # name: A string that stores base file name of tif stack
 # file_ext: file extension for iumage stack; Only ".tif" has been tested so far
-# optic1: Optical struct containing parameters for excitation wavelength #1
-# optic2: Optical struct containing parameters for excitation wavelength #2
-# optic3: Optical struct containing parameters for excitation wavelength #3
+# optic: SAIMOptics structure
 # angles: 1D array containing incidence angles in radians for the acquisition
 # 	sequence
 # init_params: Intial parameters, [A1ₒ, B1ₒ, A2ₒ, B2ₒ, A3ₒ, B3ₒ]
@@ -54,8 +50,8 @@ end
 # proportional to best-fit pixel height -  Pixel intensity = 100*height in nm;
 # 3) JLD file with results for each pixel - Fields are "A1," "B1," "A2," "B2," "A3", "B3",
 # "H," and "errors"; errors are the standard errors for fit [A1, B1, A2, B2, H]
-function fit_3c_global(file_path::String, file_name::String, optic1::SAIMOptics, optic2::SAIMOptics, 
-	optic3::SAIMOptics, angles::AbstractArray, init_params::AbstractArray, lower_bounds::AbstractArray,
+function fit_3c_global(file_path::String, file_name::String, optic::SAIMOptics,
+    angles::AbstractArray, init_params::AbstractArray, lower_bounds::AbstractArray,
 	upper_bounds::AbstractArray, step::Float64=40., disp::Bool=false)
 
     #Add code
@@ -65,12 +61,10 @@ end
 # Function that returns constants for calculating Fresnel coefficients (real
 # and imag components) and phase constants in two-color SAIM fitting routines
 # INPUTS:
-# optic1: Optical struct containing parameters for excitation wavelength #1
-# optic2: Optical struct containing parameters for excitation wavelength #2
-# optic3: Optical struct containing parameters for excitation wavelength #3
+# optic: SAIMOptics structure
 # angles: 1D array containing incidence angles in radians for the acquisition
 # 	sequence
-function calculate_constants_3c(optic1, optic2, optic3, angles)
+function calculate_constants_3c(optic, angles)
 
     #Add code
 end

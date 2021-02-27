@@ -8,8 +8,7 @@
 # INPUTS:
 # name: A string that stores base file name of tif stack
 # file_ext: file extension for iumage stack; Only ".tif" has been tested so far
-# optic1: Optical struct containing parameters for excitation wavelength #1
-# optic2: Optical struct containing parameters for excitation wavelength #2
+# optic: SAIMOptics structure
 # angles: 1D array containing incidence angles in radians for the acquisition
 # 	sequence
 # init_params: Intial parameters, [A1ₒ, B1ₒ, A2ₒ, B2ₒ, Hₒ]
@@ -123,8 +122,7 @@ end
 # INPUTS:
 # name: A string that stores base file name of tif stack
 # file_ext: file extension for iumage stack; Only ".tif" has been tested so far
-# optic1: Optical struct containing parameters for excitation wavelength #1
-# optic2: Optical struct containing parameters for excitation wavelength #2
+# optic: SAIMOptics structure
 # angles: 1D array containing incidence angles in radians for the acquisition
 # 	sequence
 # init_params: Intial parameters, [A1ₒ, B1ₒ, A2ₒ, B2ₒ]
