@@ -14,7 +14,7 @@
 # init_params: Intial parameters, [A1ₒ, B1ₒ, A2ₒ, B2ₒ, Hₒ]
 # lower_bounds: Lower bounds for [A1, B1, A2, B2, H]
 # upper_bounds: Lower bounds for [A1, B1, A2, B2, H]
-# disp: When true, a heatmap for the fit heights will be displayed
+# show: When true, a heatmap for the fit heights will be displayed
 # OUTPUTS: 1) Heatmap with fitted heights; 2) 16-bit image image with intensities
 # proportional to best-fit pixel height -  Pixel intensity = 100*height in nm;
 # 3) JLD file with results for each pixel - Fields are "A1," "B1," "A2," "B2,"
@@ -129,7 +129,7 @@ end
 # lower_bounds: Lower bounds for [A1, B1, A2, B2, H]
 # upper_bounds: Lower bounds for [A1, B1, A2, B2, H]
 # step: Step size for initial guesses for H in grid search
-# disp: When true, a heatmap for the fit heights will be displayed
+# show: When true, a heatmap for the fit heights will be displayed
 # OUTPUTS: 1) Heatmap with fitted heights; 2) 16-bit image image with intensities
 # proportional to best-fit pixel height -  Pixel intensity = 100*height in nm;
 # 3) JLD file with results for each pixel - Fields are "A1," "B1," "A2," "B2,"

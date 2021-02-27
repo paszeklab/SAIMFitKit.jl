@@ -14,14 +14,14 @@
 # init_params: Intial parameters, [A1ₒ, B1ₒ, A2ₒ, B2ₒ, A3ₒ, B3ₒ]
 # lower_bounds: Lower bounds for [A1, B1, A2, B2, A3, B3, H]
 # upper_bounds: Lower bounds for [A1, B1, A2, B2, A3, B3, H]
-# disp: When true, a heatmap for the fit heights will be displayed
+# show: When true, a heatmap for the fit heights will be displayed
 # OUTPUTS: 1) Heatmap with fitted heights; 2) 16-bit image image with intensities
 # proportional to best-fit pixel height -  Pixel intensity = 100*height in nm;
 # 3) JLD file with results for each pixel - Fields are "A1," "B1," "A2," "B2," "A3", "B3",
 # "H," and "errors"; errors are the standard errors for fit [A1, B1, A2, B2, H]
 function fit_3c_local(file_path::String, file_name::String, optic::SAIMOptics, 
     angles::AbstractArray, init_params::AbstractArray, lower_bounds::AbstractArray,
-	upper_bounds::AbstractArray, disp::Bool=false)
+	upper_bounds::AbstractArray, show::Bool=false)
 
     #Add code
 end
@@ -45,14 +45,14 @@ end
 # lower_bounds: Lower bounds for [A1, B1, A2, B2, A3, B3, H]
 # upper_bounds: Lower bounds for [A1, B1, A2, B2, A3, B3, H]
 # step: Step size for initial guesses for H in grid search
-# disp: When true, a heatmap for the fit heights will be displayed
+# show: When true, a heatmap for the fit heights will be displayed
 # OUTPUTS: 1) Heatmap with fitted heights; 2) 16-bit image image with intensities
 # proportional to best-fit pixel height -  Pixel intensity = 100*height in nm;
 # 3) JLD file with results for each pixel - Fields are "A1," "B1," "A2," "B2," "A3", "B3",
 # "H," and "errors"; errors are the standard errors for fit [A1, B1, A2, B2, H]
 function fit_3c_global(file_path::String, file_name::String, optic::SAIMOptics,
     angles::AbstractArray, init_params::AbstractArray, lower_bounds::AbstractArray,
-	upper_bounds::AbstractArray, step::Float64=40., disp::Bool=false)
+	upper_bounds::AbstractArray, step::Float64=40., show::Bool=false)
 
     #Add code
 end

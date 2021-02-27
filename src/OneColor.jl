@@ -14,7 +14,7 @@
 # init_params: Intial parameters, [Aₒ, Bₒ, Hₒ]
 # lower_bounds: Lower bounds for [A, B, H]
 # upper_bounds: Lower bounds for [A, B, H]
-# disp: When true, a heatmap for the fit heights will be displayed
+# show: When true, a heatmap for the fit heights will be displayed
 # OUTPUTS: 1) Heatmap with fitted heights; 2) 16-bit image image with intensities
 # proportional to best-fit pixel height -  Pixel intensity = 100*height in nm;
 # 3) JLD file with results for each pixel - Fields are "A," "B,"  "H,"
@@ -127,7 +127,7 @@ end
 # lower_bounds: Lower bounds for [A, B, H]
 # upper_bounds: Lower bounds for [A, B, H]
 # step: Step size for initial guesses for H in grid search
-# disp: When true, a heatmap for the fit heights will be displayed
+# show: When true, a heatmap for the fit heights will be displayed
 # OUTPUTS: 1) Heatmap with fitted heights; 2) 16-bit image image with intensities
 # proportional to best-fit pixel height -  Pixel intensity = 100*height in nm;
 # 3) JLD file with results for each pixel - Fields are "A," "B,"  "H,"

@@ -1,3 +1,40 @@
+#Function to show example fits for a given pixel in a SAIM image sequence
+function plot_fit(image_file, JLD_file, row, col)
+
+	println(image_file)
+	println(JLD_file)
+
+	#Load the constants from the JLD_file
+	constants = load(JLD_file, "constants")
+	angles = load(JLD_file, "angles")
+	angles = RTD*angles		#convert from radians to degrees
+
+	#Load the image sequence and extract the channel intensities at pixel (row, col)
+	img_HWC = load(image_file);
+    channels = channelview(float64.(img_HWC))*65535; 	#Each channel corresponds to a specific excitation angle
+    ydata = channels[row,col,:]
+
+    #Load the fit results
+    A = load(JLD_file, "A")
+    B = load(JLD_file, "B")
+	H = load(JLD_file, "H")
+    constants = load(JLD_file, "constants")
+    p = [A[row,col], B[row,col], H[row,col]]
+    
+	#Plot the example fit
+	yfit = model(constants, p)
+    colors = palette(:tab10)
+	plt = plot(angles, ydata, label="data", seriestype = :scatter, markercolor = colors[1])
+	plot!(angles, yfit, label="fit", linecolor = colors[4], linewidth = 1.5)
+    xlabel!("Incidence angle (degrees)")
+	ylabel!("Intensity (A.U.)")
+	
+    savefig(plt, "example_fit.png")
+	savefig(plt, "example_fit.pdf")
+	savefig(plt, "example_fit.svg")
+    display(plt)
+end
+
 #Plot a SAIM curve
 function plot_curve()
 
@@ -35,41 +72,4 @@ function plot_curve()
 	savefig(plt, "94_365_642nm.pdf")
 	savefig(plt, "94_365_642nm.svg")
 
-end
-
-#Function to show example fits for a given pixel in a SAIM image sequence
-function plot_fit(image_file, JLD_file, row, col)
-
-	println(image_file)
-	println(JLD_file)
-
-	#Load the constants from the JLD_file
-	constants = load(JLD_file, "constants")
-	angles = load(JLD_file, "angles")
-	angles = RTD*angles		#convert from radians to degrees
-
-	#Load the image sequence and extract the channel intensities at pixel (row, col)
-	img_HWC = load(image_file);
-    channels = channelview(float64.(img_HWC))*65535; 	#Each channel corresponds to a specific excitation angle
-    ydata = channels[row,col,:]
-
-    #Load the fit results
-    A = load(JLD_file, "A")
-    B = load(JLD_file, "B")
-	H = load(JLD_file, "H")
-    constants = load(JLD_file, "constants")
-    p = [A[row,col], B[row,col], H[row,col]]
-    
-	#Plot the example fit
-	yfit = model(constants, p)
-    colors = palette(:tab10)
-	plt = plot(angles, ydata, label="data", seriestype = :scatter, markercolor = colors[1])
-	plot!(angles, yfit, label="fit", linecolor = colors[4], linewidth = 1.5)
-    xlabel!("Incidence angle (degrees)")
-	ylabel!("Intensity (A.U.)")
-	
-    savefig(plt, "example_fit.png")
-	savefig(plt, "example_fit.pdf")
-	savefig(plt, "example_fit.svg")
-    display(plt)
 end
