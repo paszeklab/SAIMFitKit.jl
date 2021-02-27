@@ -1,6 +1,7 @@
 module SAIMFitKit
 
     export  fit_SAIM,
+            plot_fit,
             #Types
             SAIMOptics
 
