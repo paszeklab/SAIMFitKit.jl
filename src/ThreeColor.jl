@@ -20,9 +20,9 @@
 # 3) JLD file with results for each pixel - Fields are "A1," "B1," "A2," "B2," "A3", "B3",
 # "H," and "errors"; errors are the standard errors for fit [A1, B1, A2, B2, A3, B3, H]
 
-function fit_3c_local(file_path::String, file_name::String, optic::SAIMOptics, 
-    angles::AbstractArray, init_params::AbstractArray, lower_bounds::AbstractArray,
-	upper_bounds::AbstractArray, show::Bool=false)
+function fit_3c_local(file_path::String, file_name::String, optic1::SAIMOptics, optic2::SAIMOptics, optic3::SAIMOptics,
+	angles::AbstractArray, init_params::AbstractArray, lower_bounds::AbstractArray,
+	upper_bounds::AbstractArray, disp::Bool=false)
  
 	#Calculate the optical model constants for each image frame angle
 	constants = calculate_constants_3c(optic, angles)
@@ -139,9 +139,9 @@ end
 # 3) JLD file with results for each pixel - Fields are "A1," "B1," "A2," "B2," "A3", "B3",
 # "H," and "errors"; errors are the standard errors for fit [A1, B1, A2, B2, H]
 
-function fit_3c_global(file_path::String, file_name::String, optic::SAIMOptics,
-    angles::AbstractArray, init_params::AbstractArray, lower_bounds::AbstractArray,
-	upper_bounds::AbstractArray, step::Float64=40., show::Bool=false)
+function fit_3c_global(file_path::String, file_name::String, optic1::SAIMOptics, optic2::SAIMOptics, optic3::SAIMOptics,
+	angles::AbstractArray, init_params::AbstractArray, lower_bounds::AbstractArray,
+	upper_bounds::AbstractArray, step::Float64=40., disp::Bool=false)
 
 	#Calculate the optical model constants for each image frame angle
 	constants = calculate_constants_3c(optic, angles)
