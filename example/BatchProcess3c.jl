@@ -30,8 +30,8 @@ show = true                                        #Display generated heatmaps w
 
 #-------------- IMAGE STACKS ---------------------
 angles = range(5.0, length=32, stop=43.75)	#Incidece angle in degrees for each image frame	
-files = ["488_noisy_2_647_noisy_c"]				#Names of image stacks; multiple experiments can be listed to run in batch
-path = "C:\\Users\\matth\\Documents\\Julia Scripts\\SAIMFitKit\\example\\TestImages" #Path to image files
+files = ["488_560_640"]				#Names of image stacks; multiple experiments can be listed to run in batch
+path = "D:\\Google Drive\\Admin\\2017-2023 Cornell\\Research\\3_Raw_Data\\210304_SP_SAIM_Three_Color\\D6_MemGlow_488_590_640\\Test_4_2" #Path to image files
 
 #-------------- CONDUCT FITS ---------------------
 for f in files
