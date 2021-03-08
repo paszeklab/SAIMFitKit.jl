@@ -84,7 +84,7 @@ function fit_3c_local(file_path::String, file_name::String, optic1::SAIMOptics, 
 		fit_params[:,:,2], "A2", fit_params[:,:,3], "B2", fit_params[:,:,4], "A3", fit_params[:,:,5], "B3", fit_params[:,:,6],
 		"H",fit_params[:,:,7], "errors", fit_errors, "constants", constants,
 		"angles", angles, "ip", init_params, "lb", lower_bounds, "ub",
-		upper_bounds, "optic", optic, "type", "two-color local")
+		upper_bounds, "optic1", optic1, "optic2", optic2,"optic3", optic3, "type", "two-color local")
 
 	#Save the fit parameters and height standard err as CSV files
 	if !isdir(dir*"\\CSV")
@@ -218,7 +218,7 @@ function fit_3c_global(file_path::String, file_name::String, optic1::SAIMOptics,
 		fit_params[:,:,2], "A2", fit_params[:,:,3], "B2", fit_params[:,:,4], "A3", fit_params[:,:,5], "B3", fit_params[:,:,6],
 		"H",fit_params[:,:,7], "errors", fit_errors, "constants", constants,
 		"angles", angles, "ip", init_params, "lb", lower_bounds, "ub",
-		upper_bounds, "optic", optic, "type", "two-color local")
+		upper_bounds, "optic1", optic1, "optic2", optic2,"optic3", optic3, "type", "two-color local")
 
 	#Save the fit parameters and height standard err as CSV files
 	if !isdir(dir*"\\CSV")
