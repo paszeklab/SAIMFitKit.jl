@@ -25,7 +25,7 @@ function fit_3c_local(file_path::String, file_name::String, optic1::SAIMOptics, 
 	upper_bounds::AbstractArray, disp::Bool=false)
  
 	#Calculate the optical model constants for each image frame angle
-	constants = calculate_constants_3c(optic, angles)
+	constants = calculate_constants_3c(optic1, optic2, optic3, angles)
 
 	#------------- OPEN IMAGE STACK AND INITIALIZE CONTAINERS -------------
 	file = file_path*"\\"*file_name*".tif"
@@ -144,7 +144,7 @@ function fit_3c_global(file_path::String, file_name::String, optic1::SAIMOptics,
 	upper_bounds::AbstractArray, step::Float64=40., disp::Bool=false)
 
 	#Calculate the optical model constants for each image frame angle
-	constants = calculate_constants_3c(optic, angles)
+	constants = calculate_constants_3c(optic1, optic2, optic3, angles)
 
 	#------------- OPEN IMAGE STACK AND INITIALIZE CONTAINERS -------------
 	file = file_path*"\\"*file_name*".tif"
@@ -254,18 +254,19 @@ end
 # optic: SAIMOptics structure
 # angles: 1D array containing incidence angles in radians for the acquisition
 # 	sequence
-function calculate_constants_3c(optic, angles)
+function calculate_constants_3c(optic1, optic2, optic3, angles)
 
 	#Initialize containers for holding the constants
 	num_angles = length(angles)
 	constants = Array{Float64}(undef, 3*num_angles, 3)
 
 	#Calculate the constants for the first laser wavelength
-	wavelength = optic.λ_Ex_1	#The Excitation wavelength
-	dOx = optic.dOx 			#The thickness of the SiO2 layer in units of nm
-	nB = optic.nB				#The refractive index of the ambient media / cytoplasm
-	nOx = optic.nOx_1			#The refractive index of SiO2
-	nSi = optic.nSi_1			#The refractive index of Si
+	wavelength = optic1.lambda_Ex	#The Excitation wavelength
+	dOx = optic1.d_Oxide		#The thickness of the SiO2 layer in units of nm
+	nB = optic1.n_Buffer		#The refractive index of the ambient media / cytoplasm
+	nOx = optic1.n_Oxide		#The refractive index of SiO2
+	nSi = optic1.n_Silicon		#The efractive index of Si
+
 
 	inds = axes(angles, 1)
 	for i = inds
@@ -294,9 +295,11 @@ function calculate_constants_3c(optic, angles)
 	end
 
 	#Calculate the constants for the second laser wavelength
-	wavelength = optic.λ_Ex_2	#The Excitation wavelength
-	nOx = optic.nOx_2			#The refractive index of SiO2
-	nSi = optic.nSi_2			#The efractive index of Si
+	wavelength = optic2.lambda_Ex	#The Excitation wavelength
+	dOx = optic2.d_Oxide		#The thickness of the SiO2 layer in units of nm
+	nB = optic2.n_Buffer		#The refractive index of the ambient media / cytoplasm
+	nOx = optic2.n_Oxide		#The refractive index of SiO2
+	nSi = optic2.n_Silicon		#The efractive index of Si
 
 	#inds = axes(angles, 1)
 	for i = inds
@@ -324,10 +327,12 @@ function calculate_constants_3c(optic, angles)
 		constants[i+num_angles,3] = (4*pi*nB/wavelength)*cos(θB) 	#phase shift/height
 	end
 
-    #Calculate the constants for the third laser wavelength
-	wavelength = optic.λ_Ex_3	#The Excitation wavelength
-	nOx = optic.nOx_3			#The refractive index of SiO2
-	nSi = optic.nSi_3			#The efractive index of Si
+	#Calculate the constants for the third laser wavelength
+	wavelength = optic3.lambda_Ex	#The Excitation wavelength
+	dOx = optic3.d_Oxide		#The thickness of the SiO2 layer in units of nm
+	nB = optic3.n_Buffer		#The refractive index of the ambient media / cytoplasm
+	nOx = optic3.n_Oxide		#The refractive index of SiO2
+	nSi = optic3.n_Silicon		#The efractive index of Si
 
 	#inds = axes(angles, 1)
 	for i = inds
