@@ -1,5 +1,8 @@
 using SAIMFitKit
 
+#Example illustrates how to contruct and plot a one-color SAIM curve or curves
+#for a single emitter height or an array of heights (94, and 200 nm in this example)
+#Uses the utility function plot_curve_1c
 #Construct a SAIM curve
 
 opt = SAIMOptics()
