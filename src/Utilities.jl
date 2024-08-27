@@ -7,7 +7,7 @@ function plot_fit(image_file, JLD_file, row, col)
 	#Load the constants from the JLD_file
 	constants = load(JLD_file, "constants")
 	angles = load(JLD_file, "angles")
-	angles = RTD*angles		#convert from radians to degrees
+	angles_deg = angles*360/(2*pi)		#convert from radians to degrees
 
 	#Load the image sequence and extract the channel intensities at pixel (row, col)
 	img_HWC = load(image_file);
@@ -22,10 +22,10 @@ function plot_fit(image_file, JLD_file, row, col)
     p = [A[row,col], B[row,col], H[row,col]]
     
 	#Plot the example fit
-	yfit = model(constants, p)
+	yfit = model_1c(constants, p) #model(constants, p)
     colors = palette(:tab10)
-	plt = plot(angles, ydata, label="data", seriestype = :scatter, markercolor = colors[1])
-	plot!(angles, yfit, label="fit", linecolor = colors[4], linewidth = 1.5)
+	plt = plot(angles_deg, ydata, label="data", seriestype = :scatter, markercolor = colors[1])
+	plot!(angles_deg, yfit, label="fit", linecolor = colors[4], linewidth = 1.5)
     xlabel!("Incidence angle (degrees)")
 	ylabel!("Intensity (A.U.)")
 	
@@ -35,35 +35,47 @@ function plot_fit(image_file, JLD_file, row, col)
     display(plt)
 end
 
+#=calculate_constants_1c(optic, angles)
+
+	#Initialize containers for holding the constants
+	constants = Array{Float64}(undef, length(angles), 3)
+
+	wavelength = optic.λ_Ex_1	#The Excitation wavelength
+	dOx = optic.dOx 			#The thickness of the SiO2 layer in units of nm
+	nB = optic.nB				#The refractive index of the ambient media / cytoplasm
+	nOx = optic.nOx_1			#The refractive index of SiO2
+	nSi = optic.nSi_1			#The efractive index of Si
+=#
+
 #Plot a SAIM curve
-function plot_curve()
-
-	#-------------- OPTICAL PARAMETERS----------------------
-	nB = 1.33;			#The refractive index of the ambient media / cytoplasm
-	dOx = 1924.9;		#The thickness of the SiO2 layer in units of nm
-	λ_Ex_1 = 642.0; 		#The wavelength of excitation laser #1 in units of nm
-	nOx_1 = 1.463;		#The refractive index of SiO2 at excitation wavelength #1
-	nSi_1 = 4.3638; 	#The complex refractive index of Si at excitation wavelength #1; #4.3 + 0.073im;
-
-	opt1 = Optical(nB, nOx_1, nSi_1, dOx, λ_Ex_1)
+function plot_curve_1c(optic::SAIMOptics, heights::AbstractArray, angle_range::AbstractArray)
 
 	#-------------- ANGLES  ---------------------
-	angles_deg = range(5.0, length=100, stop=43.75)	#Incendece angle in degree for each image frame
-	angles_rad = angles_deg*DTR						#Incendece angle in radians for each image frame
+	angles_deg = range(angle_range[1], length=100, stop=angle_range[2])	#Incendece angle in degree for each image frame
+	angles_rad = angles_deg*2*pi/360 					#Incendece angle in radians for each image frame
 	num_angles = length(angles_rad)
 
 	#-------------- SIMULATION----------------------
 	colors = palette(:tab10)
 
-	constants = Calculate_Constants1c(opt1, angles_rad)
+	constants = calculate_constants_1c(optic, angles_rad) 
+	println(heights)
+	
+	#Optical model for one-color experiments: y = A*Pex(H,theta)+B
+	#p = [A, B, H]
+	#x[i,:] holds the optical model constants for each excitation incidence angle
+	#p = [A, B, H]
+	plt = plot()
+	for h in heights
 
-	Pex = Pex_from_Constants(94.0, constants)
-	plt = plot(angles_deg, Pex, linecolor = colors[1],
-		linewidth = 2, label = "H = 94 nm", legend=:outertopright)
-
-	Pex = Pex_from_Constants(365.0, constants)
-	plot!(angles_deg, Pex, linecolor = colors[4],
-		linewidth = 2, label = "H = 365 nm")
+		p = [1.0, 0.0, h]
+		Pex = model_1c(constants, p)
+		#plot!(angles_deg, Pex, linecolor = colors[1], linewidth = 2, label = "H = 94 nm", legend=:outertopright)
+		plot!(angles_deg, Pex, linewidth = 2, label = "H = "*string(h)*" nm", legend=:outertopright)
+	end
+		#p = [1.0, 0.0, 365.0]
+		#Pex = model_1c(constants, p)
+		#plot!(angles_deg, Pex, linecolor = colors[4], linewidth = 2, label = "H = 365 nm")
 
 	xlabel!("Incidence angle (degrees)")
 	ylabel!("Intensity (A.U.)")

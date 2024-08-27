@@ -2,6 +2,7 @@ module SAIMFitKit
 
     export  fit_SAIM,
             plot_fit,
+            plot_curve_1c,
             #Types
             SAIMOptics
 

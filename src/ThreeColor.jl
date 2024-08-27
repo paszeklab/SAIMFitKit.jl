@@ -1,3 +1,5 @@
+#Under development
+
 # ---------------------------- fit_3c_local ---------------------------------------
 # Function to conduct local non-linear least squares curve fitting for each
 # pixel in a two-color SAIM image stack

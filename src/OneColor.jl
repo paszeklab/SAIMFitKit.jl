@@ -26,7 +26,7 @@ function fit_1c_local(file_path::String, file_name::String, optic::SAIMOptics, a
 	constants = calculate_constants_1c(optic, angles)
 
 	#------------- OPEN IMAGE STACK AND INITIALIZE CONTAINERS -------------
-	file = file_path*"\\"*file_name*".tif"
+	file = joinpath(file_path, file_name*".tif")
 	#Open an image
 	img1_HWC = load(file);						#image stored as height X width X channels
 	img_CHW = permutedims(img1_HWC, (3, 1, 2))  		#image stored as channels X height X width; CHW indexing more memory friendly
@@ -64,34 +64,30 @@ function fit_1c_local(file_path::String, file_name::String, optic::SAIMOptics, a
 	println("Generating outputs for ", file_name)
 
 	#Make an output directory if needed
-	dir = file_path*"\\output\\"*file_name
-
-	if !isdir(file_path*"\\output")
-		mkdir(file_path*"\\output")
+	if !isdir( joinpath(file_path, "output") )
+		mkdir( joinpath(file_path, "output") )
 	end
-	
+
+	dir = joinpath(file_path, "output", file_name)
 	if !isdir(dir)
 		mkdir(dir)
 	end
 
 	#Save height information in a 16-bit image; Pixel intensity = 100*height in nm
-	save(File(format"PNG", dir*"\\"*file_name*"_H.png"), n0f16.((fit_params[:,:,3]/1000.)*(100000. / 65535.)))
+	save(File(format"PNG", joinpath(dir, file_name*"_H.png")), n0f16.((fit_params[:,:,3]/1000.)*(100000. / 65535.)))
 
 	#Save the fit information as a JLD file (includes fit parameters, errors, and metadata)
-	save(File(format"JLD", dir*"\\"*file_name*"_results.jld"),"A", fit_params[:,:,1], "B",
+	save(File(format"JLD2", joinpath(dir, file_name*"_results.jld")),"A", fit_params[:,:,1], "B",
 		fit_params[:,:,2], "H",fit_params[:,:,3], "errors", fit_errors,
 		"constants", constants, "angles", angles, "ip", init_params,
 		"lb", lower_bounds, "ub", upper_bounds, "optic",
 		optic, "type", "one-color local")
 
 	#Save the fit parameters and height standard err as CSV files
-	if !isdir(dir*"\\CSV")
-		mkdir(dir*"\\CSV")
-	end
-	CSV.write(dir*"\\CSV\\"*file_name*"_A.csv",  DataFrame(fit_params[:,:,1]), writeheader=false)
-	CSV.write(dir*"\\CSV\\"*file_name*"_B.csv",  DataFrame(fit_params[:,:,2]), writeheader=false)
-	CSV.write(dir*"\\CSV\\"*file_name*"_H.csv",  DataFrame(fit_params[:,:,3]), writeheader=false)
-	CSV.write(dir*"\\CSV\\"*file_name*"_H_sterr.csv",  DataFrame(fit_errors[:,:,3]), writeheader=false)
+	CSV.write(joinpath(dir, file_name*"_A.csv"),  DataFrame(fit_params[:,:,1], :auto), writeheader=false)
+	CSV.write(joinpath(dir, file_name*"_B.csv"),  DataFrame(fit_params[:,:,2], :auto), writeheader=false)
+	CSV.write(joinpath(dir, file_name*"_H.csv"),  DataFrame(fit_params[:,:,3], :auto), writeheader=false)
+	CSV.write(joinpath(dir, file_name*"_H_sterr.csv"),  DataFrame(fit_errors[:,:,3], :auto), writeheader=false)
 
 	#Construct a height map and save
 	hm = heatmap(fit_params[:,:,3], yflip=true, colorbar_title="height (nm)",
@@ -100,7 +96,7 @@ function fit_1c_local(file_path::String, file_name::String, optic::SAIMOptics, a
 	ylims!((1,rows))
 	xlims!((1,cols))
 
-	savefig(hm, dir*"\\"*file_name*"_Hmap.pdf")
+	savefig(hm, joinpath(dir, file_name*"_Hmap.pdf"))
 	println("  Completed ", file_name)
 	println()
 	if disp
@@ -136,12 +132,11 @@ function fit_1c_global(file_path::String, file_name::String, optic::SAIMOptics, 
 	init_params::AbstractArray, lower_bounds::AbstractArray, upper_bounds::AbstractArray, 
 	step::Float64=40., disp::Bool=false)
 
-
 	#Calculate the optical model constants for each image frame angle
 	constants = calculate_constants_1c(optic, angles)
 
 	#------------- OPEN IMAGE STACK AND INITIALIZE CONTAINERS -------------
-	file = file_path*"\\"*file_name*".tif"
+	file = joinpath(file_path, file_name*".tif")
 	#Open an image
 	img1_HWC = load(file);						#image stored as height X width X channels
 	img_CHW = permutedims(img1_HWC, (3, 1, 2))  		#image stored as channels X height X width; CHW indexing more memory friendly
@@ -187,36 +182,32 @@ function fit_1c_global(file_path::String, file_name::String, optic::SAIMOptics, 
 
 	#-------------- GENERATE THE OUTPUTS ----------------------
 	println("Generating outputs for ", file_name)
-
-	#Make an output directory if needed
-	dir = file_path*"\\output\\"*file_name
-
-	if !isdir(file_path*"\\output")
-		mkdir(file_path*"\\output")
-	end
 	
+	#Make an output directory if needed
+	if !isdir( joinpath(file_path, "output") )
+		mkdir( joinpath(file_path, "output") )
+	end
+
+	dir = joinpath(file_path, "output", file_name)
 	if !isdir(dir)
 		mkdir(dir)
 	end
 
 	#Save height information in a 16-bit image; Pixel intensity = 100*height in nm
-	save(File(format"PNG", dir*"\\"*file_name*"_H.png"), n0f16.((fit_params[:,:,3]/1000.)*(100000. / 65535.)))
+	save(File(format"PNG", joinpath(dir, file_name*"_H.png")), n0f16.((fit_params[:,:,3]/1000.)*(100000. / 65535.)))
 
 	#Save the fit information as a JLD file (includes fit parameters, errors, and metadata)
-	save(File(format"JLD", dir*"\\"*file_name*"_results.jld"),"A", fit_params[:,:,1], "B",
-		fit_params[:,:,2], "H",fit_params[:,:,3], "errors", fit_errors,
-		"constants", constants, "angles", angles, "ip", init_params,
+	save(File(format"JLD2", joinpath(dir, file_name*"_results.jld")),"A", fit_params[:,:,1], "B",
+		fit_params[:,:,2], "H",fit_params[:,:,3] , "errors", fit_errors,
+		"constants", constants,  "angles", angles, "ip", init_params,
 		"lb", lower_bounds, "ub", upper_bounds, "step", step, "optic",
 		optic, "type", "one-color global")
-
+	println("optic")
 	#Save the fit parameters and height standard err as CSV files
-	if !isdir(dir*"\\CSV")
-		mkdir(dir*"\\CSV")
-	end
-	CSV.write(dir*"\\CSV\\"*file_name*"_A.csv",  DataFrame(fit_params[:,:,1]), writeheader=false)
-	CSV.write(dir*"\\CSV\\"*file_name*"_B.csv",  DataFrame(fit_params[:,:,2]), writeheader=false)
-	CSV.write(dir*"\\CSV\\"*file_name*"_H.csv",  DataFrame(fit_params[:,:,3]), writeheader=false)
-	CSV.write(dir*"\\CSV\\"*file_name*"_H_sterr.csv",  DataFrame(fit_errors[:,:,3]), writeheader=false)
+	CSV.write(joinpath(dir, file_name*"_A.csv"),  DataFrame(fit_params[:,:,1], :auto), writeheader=false)
+	CSV.write(joinpath(dir, file_name*"_B.csv"),  DataFrame(fit_params[:,:,2], :auto), writeheader=false)
+	CSV.write(joinpath(dir, file_name*"_H.csv"),  DataFrame(fit_params[:,:,3], :auto), writeheader=false)
+	CSV.write(joinpath(dir, file_name*"_H_sterr.csv"),  DataFrame(fit_errors[:,:,3], :auto), writeheader=false)
 
 	#Construct a height map and save
 	hm = heatmap(fit_params[:,:,3], yflip=true, colorbar_title="height (nm)",
@@ -224,13 +215,12 @@ function fit_1c_global(file_path::String, file_name::String, optic::SAIMOptics, 
 		 yaxis = (nothing, false))
 	ylims!((1,rows))
 	xlims!((1,cols))
-	savefig(hm, dir*"\\"*file_name*"_Hmap.pdf")
+	savefig(hm, joinpath(dir, file_name*"_Hmap.pdf") )
 	println("  Completed ", file_name)
 	println()
 	if disp
 		display(hm)
 	end
-
 end
 
 # ------------------------ calculate_constants_1c -----------------------------

@@ -21,11 +21,12 @@ lb = [0.0, 0.0, 0.0, 0.0, 0.0]					#Lower bounds for [A1, B1, A2, B2, H]
 ub = [10000., 10000., 10000., 10000., 450.]		#Upper bounds for [A1, B1, A2, B2, H]
 
 #-------------- IMAGE STACKS ---------------------
-angles = range(5.0, length=32, stop=43.75)	#Incidece angle in degrees for each image frame	
+angles_deg = range(5.0, length=32, stop=43.75)	#Incidece angle in degrees for each image frame	
+angles = angles_deg*2*pi/360  	                    #Incidece angle in radians for each image frame	
 files = ["488_noisy_2_647_noisy_c"]				#Names of image stacks; multiple experiments can be listed to run in batch
-path = "C:\\Users\\matth\\.julia\\dev\\SAIMFitKit\\example\\TestImages" #Path to image files
+path = "/Users/matthewpaszek/Documents/GitHub/SAIMFitKit.jl/example/TestImages" #Path to image files
 
 #-------------- CONDUCT FITS ---------------------
 for f in files
-    fit_SAIM(path, f, opt, angles, p0, lb, ub, show=true, glb=false, color=2)
+    fit_SAIM(path, f, opt, angles, p0, lb, ub, show=true, glb=true, color=2)
 end

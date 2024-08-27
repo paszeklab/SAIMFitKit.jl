@@ -15,12 +15,13 @@ lb = [0.0, 0.0, 0.0]			#Lower bounds for [A, B, H]
 ub = [10000., 10000., 200.]		#Upper bounds for [A, B, H]
 
 #-------------- IMAGE STACKS ---------------------
-angles = range(5.0, length=32, stop=43.75)	    #Incidece angle in degrees for each image frame	
+angles_deg = range(5.0, length=32, stop=43.75)	    #Incidece angle in degrees for each image frame	
+angles = angles_deg*2*pi/360  	                    #Incidece angle in radians for each image frame	
 files = ["21TR_5c"]                             #Names of image stacks; multiple experiments can be listed to run in batch	
-path = "C:\\Users\\matth\\.julia\\dev\\SAIMFitKit\\example\\TestImages" #Path to image files
+path = "/Users/matthewpaszek/Documents/GitHub/SAIMFitKit.jl/example/TestImages" #Path to image files
 
 #-------------- CONDUCT FITS ---------------------
 for f in files
-    fit_SAIM(path, f, opt, angles, p0, lb, ub, glb=true, step=40.0, show=true)
+    fit_SAIM(path, f, opt, angles, p0, lb, ub, glb=false, step=40.0, show=true)
 end
 
