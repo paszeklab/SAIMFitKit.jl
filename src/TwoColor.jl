@@ -217,7 +217,7 @@ function fit_2c_global(file_path::String, file_name::String, optic::SAIMOptics,
 	CSV.write(joinpath(dir, file_name*"_H_sterr.csv"),  DataFrame(fit_errors[:,:,5], :auto), writeheader=false)
 
 	#Construct a height map and save
-	hm = heatmap(fit_params[:,:,5], yflip=true, colorbar_title="height (nm)",
+	hm = heatmap(fit_params[:,:,5], yflip=true, colorbar_title=" \nheight (nm)",
 		color=:RdYlBu_10, aspect_ratio=:equal, xaxis = (nothing, false),
 		 yaxis = (nothing, false))
 	ylims!((1,rows))
