@@ -1,7 +1,7 @@
 name = "SAIMFitKit"
 uuid = "12db381f-1373-4c19-8220-6db16b5d6e14"
 authors = ["matth "]
-version = "0.1.0"
+version = "1.1.0"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
@@ -14,4 +14,4 @@ Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 
 [compat]
-julia = "1.5.3"
+julia = "1.9.1"
